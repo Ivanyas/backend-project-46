@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Compares two configuration files and shows a difference.",
   "main": "index.js",
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +18,14 @@
   "bugs": {
     "url": "https://github.com/Ivanyas/backend-project-46/issues"
   },
-  "homepage": "https://github.com/Ivanyas/backend-project-46#readme"
+  "type": "module",
+  "homepage": "https://github.com/Ivanyas/backend-project-46#readme",
+  "dependencies": {
+    "@eslint/js": "^9.30.1",
+    "@stylistic/eslint-plugin": "^5.1.0",
+    "commander": "^14.0.0",
+    "eslint": "^9.30.1",
+    "globals": "^16.3.0",
+    "typescript-eslint": "^8.35.1"
+  }
 }
