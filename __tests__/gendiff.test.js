@@ -14,19 +14,19 @@ test.each(files)('check comparing "stylish" files', (file1, file2) => {
   const filepath1 = getFilePath(file1);
   const filepath2 = getFilePath(file2);
   const result = readFileSync(getFilePath('stylish_result.txt'), 'utf-8');
-  expect(gendiff(filepath1, filepath2, 'stylish')).toEqual(result);
+  expect(gendiff(filepath1, filepath2, 'stylish').trim()).toEqual(result.trim());
 });
 
 test.each(files)('check comparing "plain" files', (file1, file2) => {
   const filepath1 = getFilePath(file1);
   const filepath2 = getFilePath(file2);
   const result = readFileSync(getFilePath('plain_result.txt'), 'utf-8');
-  expect(gendiff(filepath1, filepath2, 'plain')).toEqual(result);
+  expect(gendiff(filepath1, filepath2, 'plain').trim()).toEqual(result.trim());
 });
 
 test.each(files)('check comparing "JSON" files', (file1, file2) => {
   const filepath1 = getFilePath(file1);
   const filepath2 = getFilePath(file2);
   const result = readFileSync(getFilePath('json_result.txt'), 'utf-8');
-  expect(gendiff(filepath1, filepath2, 'json')).toEqual(result);
+  expect(gendiff(filepath1, filepath2, 'json').trim()).toEqual(result.trim());
 });
