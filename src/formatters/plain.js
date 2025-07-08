@@ -1,4 +1,4 @@
-const formatValue = value => {
+const formatValue = (value) => {
   if (typeof value === 'object' && value !== null) {
     return '[complex value]'
   }
@@ -10,7 +10,7 @@ const formatValue = value => {
 
 const iter = (tree, ancestry = []) => {
   return tree
-    .flatMap(node => {
+    .flatMap((node) => {
       const property = [...ancestry, node.key].join('.')
       switch (node.type) {
         case 'nested':
