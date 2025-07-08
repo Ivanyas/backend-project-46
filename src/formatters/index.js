@@ -1,17 +1,17 @@
-import getStylishOutput from './stylish.js';
-import getPlainOutut from './plain.js';
+import getStylishOutput from './stylish.js'
+import getPlainOutut from './plain.js'
 
 const getOutput = (data, format) => {
   switch (format) {
     case 'stylish':
-      return getStylishOutput(data);
+      return getStylishOutput(data)
     case 'plain':
-      return getPlainOutut(data);
+      return getPlainOutut(data)
     case 'json':
-      return JSON.stringify(data);
+      return JSON.stringify(data)
     default:
-      throw new Error(`Unknown ${format}.`);
+      throw new Error(`Unknown ${format}.`)
   }
-};
+}
 
-export default getOutput;
+export default getOutput
