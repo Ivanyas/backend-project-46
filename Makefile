@@ -1,13 +1,13 @@
-install: #установить зависимости
+install: 
 	npm ci
 
 gendiff:
 	node bin/gendiff.js
 
-publish: #публикация
+publish: 
 	npm publish --dry-run
 
-lint: #проверка линтером
+lint: 
 	npx eslint .
 
 test:
