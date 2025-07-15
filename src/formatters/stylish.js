@@ -1,45 +1,43 @@
-const getIndent = depth => '  '.repeat(depth)
+import _ from 'lodash'
 
-const stringify = (value, depth) => {
-  if (typeof value !== 'object' || value === null) {
-    return String(value)
+const getLeftIndent = (depth, replacer = ' ', spacesCount = 4) => (
+  replacer.repeat((depth * spacesCount) - 2))
+const getRightIndent = (depth, replacer = ' ', spacesCount = 4) => (
+  replacer.repeat((depth * spacesCount) - spacesCount))
+
+const getString = (data, depth = 1) => {
+  if (!_.isPlainObject(data)) return `${data}`
+  const currentValue = Object.entries(data)
+  const line = currentValue.map(([key, value]) => `${getLeftIndent(depth)}  ${key}: ${getString(value, depth + 1)}`)
+  return ['{', ...line, `${getRightIndent(depth)}}`].join('\n')
+}
+
+const getOutput = (tree) => {
+  const iter = (currentValue, depth = 1) => {
+    const line = currentValue.flatMap((node) => {
+      const {
+        key, children, type, value1, value2,
+      } = node
+      switch (type) {
+        case 'nested':
+          return `${getLeftIndent(depth)}  ${key}: ${iter(children, depth + 1)}`
+        case 'removed':
+          return `${getLeftIndent(depth)}- ${key}: ${getString(value1, depth + 1)}`
+        case 'added':
+          return `${getLeftIndent(depth)}+ ${key}: ${getString(value2, depth + 1)}`
+        case 'matched':
+          return `${getLeftIndent(depth)}  ${key}: ${getString(value1, depth + 1)}`
+        case 'updated':
+          return [
+            `${getLeftIndent(depth)}- ${key}: ${getString(value1, depth + 1)}`,
+            `${getLeftIndent(depth)}+ ${key}: ${getString(value2, depth + 1)}`]
+        default:
+          throw new Error(`Unknown type ${type}.`)
+      }
+    })
+    return ['{', ...line, `${getRightIndent(depth)}}`].join('\n')
   }
-  const indent = getIndent(depth + 2)
-  const bracketIndent = getIndent(depth + 1)
-  const entries = Object.entries(value).map(([key, val]) => {
-    return `${indent}${key}: ${stringify(val, depth + 2)}`
-  })
-  return `{
-${entries.join('\n')}
-${bracketIndent}}`
+  return iter(tree)
 }
 
-const iter = (tree, depth = 1) => {
-  const indent = getIndent(depth)
-  const bracketIndent = getIndent(depth - 1)
-  return `{
-${tree.map((node) => {
-  switch (node.type) {
-    case 'nested':
-      return `${indent}  ${node.key}: ${iter(node.children, depth + 1)}`
-    case 'added':
-      return `${indent}+ ${node.key}: ${stringify(node.value2, depth)}`
-    case 'removed':
-      return `${indent}- ${node.key}: ${stringify(node.value1, depth)}`
-    case 'updated':
-      return [
-        `${indent}- ${node.key}: ${stringify(node.value1, depth)}`,
-        `${indent}+ ${node.key}: ${stringify(node.value2, depth)}`,
-      ].join('\n')
-    case 'matched':
-      return `${indent}  ${node.key}: ${stringify(node.value1, depth)}`
-    default:
-      throw new Error(`Unknown node type: ${node.type}`)
-  }
-}).join('\n')}
-${bracketIndent}}`
-}
-
-export default function stylish(tree) {
-  return iter(tree, 1)
-}
+export default getOutput
