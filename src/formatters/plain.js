@@ -8,22 +8,20 @@ const formatValue = (value) => {
   return String(value)
 }
 
+const typeHandlers = {
+  nested: (node, ancestry, iter) => iter(node.children, [...ancestry, node.key]),
+  added: (node, ancestry) => `Property '${[...ancestry, node.key].join('.')}' was added with value: ${formatValue(node.value2)}`,
+  removed: (node, ancestry) => `Property '${[...ancestry, node.key].join('.')}' was removed`,
+  updated: (node, ancestry) => `Property '${[...ancestry, node.key].join('.')}' was updated. From ${formatValue(node.value1)} to ${formatValue(node.value2)}`,
+  matched: () => [],
+}
+
 const iter = (tree, ancestry = []) => {
   return tree
     .flatMap((node) => {
-      const property = [...ancestry, node.key].join('.')
-      switch (node.type) {
-        case 'nested':
-          return iter(node.children, [...ancestry, node.key])
-        case 'added':
-          return `Property '${property}' was added with value: ${formatValue(node.value2)}`
-        case 'removed':
-          return `Property '${property}' was removed`
-        case 'updated':
-          return `Property '${property}' was updated. From ${formatValue(node.value1)} to ${formatValue(node.value2)}`
-        default:
-          return []
-      }
+      const handler = typeHandlers[node.type]
+      if (!handler) throw new Error(`Unknown type ${node.type}.`)
+      return handler(node, ancestry, iter)
     })
     .filter(Boolean)
     .join('\n')

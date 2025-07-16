@@ -12,15 +12,13 @@ const compare = (data1, data2) => {
   const result = keys.map((key) => {
     const value1 = data1[key]
     const value2 = data2[key]
-    const isKeyInData1 = _.has(data1, key)
-    const isKeyInData2 = _.has(data2, key)
 
     switch (true) {
-      case _.isObject(value1) && _.isObject(value2):
+      case _.isPlainObject(value1) && _.isPlainObject(value2):
         return { key, children: compare(value1, value2), type: 'nested' }
-      case isKeyInData1 && !isKeyInData2:
+      case _.has(data1, key) && !_.has(data2, key):
         return { key, value1, type: 'removed' }
-      case !isKeyInData1 && isKeyInData2:
+      case !_.has(data1, key) && _.has(data2, key):
         return { key, value2, type: 'added' }
       case _.isEqual(value1, value2):
         return { key, value1, type: 'matched' }

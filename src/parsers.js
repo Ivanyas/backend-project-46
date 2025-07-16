@@ -1,13 +1,13 @@
 import YAML from 'yaml'
 
-const parse = (fileData, format) => {
+const parse = (data, format) => {
   switch (format) {
     case 'json':
-      return JSON.parse(fileData)
+      return JSON.parse(data)
     case 'yml':
-      return YAML.parse(fileData)
+      return YAML.parse(data)
     case 'yaml':
-      return YAML.parse(fileData)
+      return YAML.parse(data)
     default:
       throw new Error(`Unknown format ${format}!`)
   }
